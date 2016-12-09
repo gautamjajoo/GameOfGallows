@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Hangman</string>
+    <string name="gallows">Game Of Gallows</string>
+    <string name="enter">Touch to Enter</string>
+</resources>
