@@ -39,6 +39,7 @@ public class GameActivity extends AppCompatActivity {
     private Integer j=0;
     private Integer no_letter=0;
     private static final String TAG="GameActivity";
+    private Integer[] flag;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +48,9 @@ public class GameActivity extends AppCompatActivity {
         Resources resource = getResources();
         words = resource.getStringArray(R.array.words);
 
+        flag = new Integer[26];
+        for(int i=0;i<26;i++)
+            flag[i]=1;
         rand = new Random();
         currWord="";
 
@@ -104,44 +108,55 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 
-                Log.i(TAG,"Inside onItemCLick");
-                view.setEnabled(false);
-                view.setBackgroundResource(R.drawable.letter_up);
-                current_letter = letters[position].charAt(0);
-                for(int i=0;i<currWord.length();i++){
-                    if(currWord.charAt(i)==current_letter){
-                        charViews[i].setTextColor(Color.BLACK);
-                        current_count++;
-                        if(current_count==currWord.length()){
-                            Toast.makeText(GameActivity.this,"Your message", Toast.LENGTH_LONG).show();
+                Log.i(TAG, "Inside onItemCLick");
+
+                if (flag[position] == 1) {
+                    view.setEnabled(false);
+                    view.setClickable(false);
+                    view.setBackgroundResource(R.drawable.letter_up);
+
+
+                    current_letter = letters[position].charAt(0);
+                    for (int i = 0; i < currWord.length(); i++) {
+                        if (currWord.charAt(i) == current_letter) {
+                            charViews[i].setTextColor(Color.BLACK);
+                            current_count++;
+                            if (current_count == currWord.length()) {
+                                Toast.makeText(GameActivity.this, "Your message", Toast.LENGTH_LONG).show();
+                            }
+
+                        } else {
+                            Log.i("GameActivity", "Inside Else " + no_letter);
+                            no_letter++;
                         }
 
                     }
 
-                    else
-                    {
-                        Log.i("GameActivity","Inside Else "+no_letter);
-                        no_letter++;
+                    if (no_letter == currWord.length()) {
+                        Log.i("GameActivity", "Inside Body Parts " + no_letter);
+                        bodyParts[j].setVisibility(View.VISIBLE);
+                        j++;
+
                     }
 
+                    if (j == 6) {
+                        Toast.makeText(GameActivity.this, "Game Over Mate", Toast.LENGTH_LONG).show();
+                    }
+
+                    no_letter = 0;
+
+                    flag[position]=0;
                 }
 
-                if(no_letter==currWord.length()){
-                    Log.i("GameActivity","Inside Body Parts "+no_letter);
-                    bodyParts[j].setVisibility(View.VISIBLE);
-                    j++;
-
-                }
-
-                if(j==6){
-                    Toast.makeText(GameActivity.this,"Game Over Mate", Toast.LENGTH_LONG).show();
-                }
-
-                no_letter=0;
+                         
 
             }
+
+
         });
 
 
     }
-}
+
+
+    }
